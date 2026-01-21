@@ -516,9 +516,6 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
               Com base em suas respostas, você mostrou maior afinidade com esta área. Comece seus estudos e boa sorte na prova!
             </p>
             <ButtonGroup>
-              <SecondaryButton onClick={handleRefreshAnalysis} disabled={loading}>
-                {loading ? '⏳ Refazendo análise...' : '🔄 Refazer Análise'}
-              </SecondaryButton>
               {tests.length < 3 && (
                 <SecondaryButton onClick={() => window.location.href = '/quiz'} style={{ background: 'linear-gradient(135deg, #FF9800, #F57C00)', boxShadow: '0 4px 12px rgba(255, 152, 0, 0.3)' }}>
                   ➕ Fazer Novo Teste
