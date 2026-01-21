@@ -15,6 +15,8 @@ const SidebarContainer = styled.div<{ isOpen: boolean }>`
   height: 100vh;
   overflow-y: auto;
   z-index: 50;
+  display: flex;
+  flex-direction: column;
   
   @media (max-width: 768px) {
     position: fixed;
@@ -48,6 +50,12 @@ const LogoContainer = styled.div`
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    order: 10;
+    margin-top: auto;
+    margin-bottom: 1rem;
+  }
 `;
 
 const LogoImage = styled.img`
@@ -56,9 +64,14 @@ const LogoImage = styled.img`
 `;
 
 const Logo = styled.div`
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
   color: #4CAF50;
+  letter-spacing: -0.5px;
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+  }
 `;
 
 const NavItem = styled.button<{ isActive: boolean }>`
@@ -129,6 +142,10 @@ const LogoutButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    order: 9;
+  }
 
   &:hover {
     transform: translateY(-2px);

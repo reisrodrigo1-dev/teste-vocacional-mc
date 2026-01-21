@@ -19,6 +19,14 @@ const Container = styled.div`
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
   overflow-y: auto;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem;
+  }
+
+  @media (max-width: 600px) {
+    padding: 1rem;
+  }
 `;
 
 const Header = styled.div`
@@ -79,6 +87,26 @@ const QuestionContainer = styled.div`
     padding: 2.5rem 3rem;
   }
   
+  @media (max-width: 768px) {
+    padding: 1.75rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+
+    &.news-container {
+      padding: 1.75rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    &.news-container {
+      padding: 1.25rem;
+    }
+  }
+  
   @keyframes slideUp {
     from {
       opacity: 0;
@@ -97,6 +125,16 @@ const QuestionTitle = styled.h2`
   color: #333;
   font-weight: 600;
   line-height: 1.4;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const ButtonGroup = styled.div`
@@ -328,9 +366,16 @@ const NewsGrid = styled.div`
   margin-top: 2rem;
   width: 100%;
 
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
+    margin-top: 1rem;
   }
 `;
 
@@ -346,14 +391,24 @@ const NewsCard = styled.div`
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+
+    &:active {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
 `;
 
-const NewsImageContainer = styled.div`
+const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   position: relative;
   width: 100%;
   padding-top: 25%;
   background: #e0e0e0;
   overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
 
   img {
     position: absolute;
@@ -363,22 +418,99 @@ const NewsImageContainer = styled.div`
     height: 100%;
     object-fit: contain;
     background: white;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    padding-top: 50%;
+
+    img {
+      object-fit: cover;
+    }
+
+    &:active img {
+      transform: scale(1.02);
+    }
+  }
+`;
+
+const ImageModal = styled.div<{ isOpen: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 999;
+  display: ${props => props.isOpen ? 'flex' : 'none'};
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+
+  img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+
+  button {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      background: #f0f0f0;
+    }
+
+    @media (max-width: 768px) {
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      font-size: 1.2rem;
+    }
   }
 `;
 
 const NewsVoteContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 1rem;
   padding: 1.5rem;
   border-top: none;
   background: transparent;
   margin-top: 0.5rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+    padding: 1rem;
+  }
 `;
 
-const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' }>`
+const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' | 'none' }>`
   background: none;
-  border: 2px solid ${props => props.active ? (props.type === 'like' ? '#4CAF50' : '#FF6B6B') : '#ddd'};
+  border: 2px solid ${props => {
+    if (props.type === 'none') {
+      return props.active ? '#999' : '#ddd';
+    }
+    return props.active ? (props.type === 'like' ? '#4CAF50' : '#FF6B6B') : '#ddd';
+  }};
   border-radius: 8px;
   padding: 0.6rem 1.2rem;
   font-size: 1.2rem;
@@ -389,8 +521,18 @@ const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' }>
   gap: 0.5rem;
 
   &:hover {
-    border-color: ${props => props.type === 'like' ? '#4CAF50' : '#FF6B6B'};
-    background: ${props => props.type === 'like' ? 'rgba(76, 175, 80, 0.05)' : 'rgba(255, 107, 107, 0.05)'};
+    border-color: ${props => {
+      if (props.type === 'none') {
+        return '#999';
+      }
+      return props.type === 'like' ? '#4CAF50' : '#FF6B6B';
+    }};
+    background: ${props => {
+      if (props.type === 'none') {
+        return 'rgba(153, 153, 153, 0.05)';
+      }
+      return props.type === 'like' ? 'rgba(76, 175, 80, 0.05)' : 'rgba(255, 107, 107, 0.05)';
+    }};
   }
 
   &:active {
@@ -414,11 +556,73 @@ const NewsImage = styled.img`
   }
 `;
 
+const LoadingScreen = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4CAF50, #9C27B0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  flex-direction: column;
+  gap: 2rem;
+
+  @keyframes slide {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+`;
+
+const LoadingMessage = styled.h1`
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  animation: slide 2s ease-in-out infinite;
+  max-width: 90%;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+`;
+
+const LoadingSpinner = styled.div`
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 const Quiz: React.FC = () => {
   const [step, setStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [limitReached, setLimitReached] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [zoomedImageId, setZoomedImageId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Check if user already has 3 tests
@@ -465,7 +669,7 @@ const Quiz: React.FC = () => {
     },
     {
       type: 'singleSelect',
-      question: 'Qual processualista você tem maior facilidade de compreensão?',
+      question: 'Qual direito processual você tem maior facilidade de compreensão?',
       options: ['Processo Civil', 'Processo Penal', 'Processo do Trabalho'],
       key: 'processualist',
     },
@@ -514,6 +718,7 @@ const Quiz: React.FC = () => {
       question: 'Em poucas palavras, por que você escolheria ou não cada área?',
       areas: areas,
       key: 'reasons',
+      optional: true,
     },
   ];
 
@@ -574,6 +779,12 @@ const Quiz: React.FC = () => {
     }
 
     if (q.type === 'textAreas') {
+      // Se é opcional, pode deixar vazio
+      if (q.optional) {
+        setValidationError(null);
+        return true;
+      }
+
       const areaVals = responses[q.key] || {};
       const missing = (q.areas || []).some((area: string) => {
         const a = areaVals[area] || {};
@@ -677,6 +888,11 @@ const Quiz: React.FC = () => {
 
   const calculateAndSubmit = async () => {
     if (!auth.currentUser) return;
+    setIsLoading(true);
+    
+    // Aguarda 5 segundos para mostrar a tela de loading
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
     setIsSubmitting(true);
     try {
       const scores = calculateScores();
@@ -829,6 +1045,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
     } catch (error) {
       console.error('Erro ao enviar teste:', error);
       setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
@@ -892,7 +1109,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                 const liked = votes[news.id];
                 return (
                   <NewsCard key={news.id}>
-                    <NewsImageContainer>
+                    <NewsImageContainer onClick={() => setZoomedImageId(news.id)}>
                       <img 
                         src={`/noticias/${news.image}`} 
                         alt={news.title}
@@ -933,6 +1150,18 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                         }}
                       >
                         👎 Não Me Interesso
+                      </VoteButton>
+                      <VoteButton
+                        type="none"
+                        active={liked === undefined || liked === null}
+                        onClick={() => {
+                          const votes = responses[q.key] || {};
+                          const newVotes = { ...votes };
+                          delete newVotes[news.id];
+                          updateResponse(q.key, newVotes);
+                        }}
+                      >
+                        ⊘ Pular
                       </VoteButton>
                     </NewsVoteContainer>
                   </NewsCard>
@@ -998,27 +1227,34 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
         );
       case 'textAreas':
         return (
-          <TextAreaSection>
-            {q.areas!.map((area) => (
-              <AreaBlock key={area}>
-                <h4>{area}</h4>
-                <TextAreaRow>
-                  <TextAreaInput
-                    placeholder="Pontos positivos"
-                    value={responses[q.key]?.[area]?.positive || ''}
-                    onChange={(e) => updateResponse(q.key, { ...responses[q.key], [area]: { ...responses[q.key]?.[area], positive: e.target.value.slice(0, 100) } })}
-                    maxLength={100}
-                  />
-                  <TextAreaInput
-                    placeholder="Pontos negativos"
-                    value={responses[q.key]?.[area]?.negative || ''}
-                    onChange={(e) => updateResponse(q.key, { ...responses[q.key], [area]: { ...responses[q.key]?.[area], negative: e.target.value.slice(0, 100) } })}
-                    maxLength={100}
-                  />
-                </TextAreaRow>
-              </AreaBlock>
-            ))}
-          </TextAreaSection>
+          <div>
+            {q.optional && (
+              <p style={{ fontSize: '0.9rem', color: '#999', marginBottom: '1rem', fontStyle: 'italic' }}>
+                (Opcional - você pode deixar em branco se preferir)
+              </p>
+            )}
+            <TextAreaSection>
+              {q.areas!.map((area) => (
+                <AreaBlock key={area}>
+                  <h4>{area}</h4>
+                  <TextAreaRow>
+                    <TextAreaInput
+                      placeholder="Pontos positivos"
+                      value={responses[q.key]?.[area]?.positive || ''}
+                      onChange={(e) => updateResponse(q.key, { ...responses[q.key], [area]: { ...responses[q.key]?.[area], positive: e.target.value.slice(0, 100) } })}
+                      maxLength={100}
+                    />
+                    <TextAreaInput
+                      placeholder="Pontos negativos"
+                      value={responses[q.key]?.[area]?.negative || ''}
+                      onChange={(e) => updateResponse(q.key, { ...responses[q.key], [area]: { ...responses[q.key]?.[area], negative: e.target.value.slice(0, 100) } })}
+                      maxLength={100}
+                    />
+                  </TextAreaRow>
+                </AreaBlock>
+              ))}
+            </TextAreaSection>
+          </div>
         );
       default:
         return <div>Question type not supported</div>;
@@ -1027,6 +1263,12 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
 
   return (
     <Layout title="📝 Quiz - Teste Vocacional">
+      {isLoading && (
+        <LoadingScreen>
+          <LoadingSpinner />
+          <LoadingMessage>Estamos preparando o seu resultado</LoadingMessage>
+        </LoadingScreen>
+      )}
       <Container>
         {limitReached ? (
           <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -1075,6 +1317,20 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
             </Button>
           </ButtonGroup>
         </QuestionContainer>
+        
+        {/* Image Zoom Modal */}
+        {zoomedImageId && (
+          <ImageModal isOpen={!!zoomedImageId}>
+            <img 
+              src={`/noticias/${newsData.find(n => n.id === zoomedImageId)?.image}`}
+              alt="Zoomed news"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.jpg';
+              }}
+            />
+            <button onClick={() => setZoomedImageId(null)}>✕</button>
+          </ImageModal>
+        )}
           </>
         )}
       </Container>

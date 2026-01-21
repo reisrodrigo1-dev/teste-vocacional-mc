@@ -233,6 +233,93 @@ const SecondaryButton = styled(Button)`
   }
 `;
 
+const ShareSection = styled.div`
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 2px solid #e9ecef;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+`;
+
+const ShareTitle = styled.h3`
+  color: #333;
+  font-size: 1.4rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
+`;
+
+const ShareButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+`;
+
+const ShareButton = styled.button`
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: white;
+    box-shadow: 0 4px 12px rgba(188, 24, 136, 0.3);
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(188, 24, 136, 0.4);
+    }
+  }
+
+  &.whatsapp {
+    background: #25d366;
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+  }
+
+  &.platform {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+  }
+`;
+
+const ShareDescription = styled.p`
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+`;
+
 const Result: React.FC = () => {
   const [tests, setTests] = useState<Array<{ id: string; data: TestResponse }>>([]);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
@@ -274,6 +361,170 @@ const Result: React.FC = () => {
     };
     fetchResults();
   }, []);
+
+  const shareOnWhatsApp = () => {
+    const url = window.location.href;
+    const text = `🎯 Descobri minha área de afinidade na OAB!\n\n✨ Meu resultado: *${test?.aiRanking?.[0] || 'Área recomendada'}*\n\nFaça o seu teste também: ${url}\n\n📚 Via MeuCurso Educacional`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const generateImageForSocial = async () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = 1080;
+    canvas.height = 1080;
+
+    // Background cinza bem claro (sem gradient)
+    ctx.fillStyle = '#F5F5F5';
+    ctx.fillRect(0, 0, 1080, 1080);
+
+    // Load and draw logo
+    const logoImg = new Image();
+    logoImg.crossOrigin = 'anonymous';
+    
+    const drawContent = () => {
+      // Background cinza bem claro
+      ctx.fillStyle = '#F5F5F5';
+      ctx.fillRect(0, 0, 1080, 1080);
+
+      // Header background com opacidade
+      ctx.fillStyle = 'rgba(200, 200, 200, 0.2)';
+      ctx.fillRect(0, 0, 1080, 140);
+      
+      // Logo (maintain aspect ratio)
+      if (logoImg.complete && logoImg.naturalWidth > 0) {
+        const logoHeight = 60;
+        const logoWidth = (logoImg.naturalWidth / logoImg.naturalHeight) * logoHeight;
+        ctx.drawImage(logoImg, 50, 30, logoWidth, logoHeight);
+      }
+
+      // Logo text
+      ctx.fillStyle = '#1A1A1A';
+      ctx.font = 'bold 32px Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('', 160, 75);
+
+      // Title with better positioning
+      ctx.fillStyle = '#1A1A1A';
+      ctx.font = 'bold 48px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🎯 Teste Vocacional OAB', 540, 160);
+
+      // Podium section with adjusted colors
+      const ranking = test?.aiRanking?.slice(0, 3) || [];
+      const podiumColors = ['#FFE066', '#F0EDD4', '#E8965A']; // Cores mais suaves
+      const podiumShadows = ['#E6C700', '#D4D0B8', '#CC7A3C']; // Sombras
+      const medals = ['🥇', '🥈', '🥉'];
+      const podiumHeights = [150, 190, 130];
+      const podiumPositions = [200, 440, 680]; // 2º, 1º (centro), 3º - mais próximas
+      const podiumOrder = [1, 0, 2]; // Silver, Gold, Bronze
+      
+      // Draw podium boxes with shadows
+      podiumOrder.forEach((rankIndex, boxIndex) => {
+        const x = podiumPositions[boxIndex];
+        const height = podiumHeights[boxIndex];
+        const y = 500 - height;
+        
+        // Shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.beginPath();
+        ctx.moveTo(x + 15, y + 5);
+        ctx.lineTo(x + 175, y + 5);
+        ctx.quadraticCurveTo(x + 185, y + 5, x + 185, y + 15);
+        ctx.lineTo(x + 185, y + height - 5);
+        ctx.quadraticCurveTo(x + 185, y + height + 5, x + 175, y + height + 5);
+        ctx.lineTo(x + 15, y + height + 5);
+        ctx.quadraticCurveTo(x + 5, y + height + 5, x + 5, y + height - 5);
+        ctx.lineTo(x + 5, y + 15);
+        ctx.quadraticCurveTo(x + 5, y + 5, x + 15, y + 5);
+        ctx.fill();
+        
+        // Podium box
+        ctx.fillStyle = podiumColors[rankIndex];
+        ctx.beginPath();
+        ctx.moveTo(x + 10, y);
+        ctx.lineTo(x + 170, y);
+        ctx.quadraticCurveTo(x + 180, y, x + 180, y + 10);
+        ctx.lineTo(x + 180, y + height - 10);
+        ctx.quadraticCurveTo(x + 180, y + height, x + 170, y + height);
+        ctx.lineTo(x + 10, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - 10);
+        ctx.lineTo(x, y + 10);
+        ctx.quadraticCurveTo(x, y, x + 10, y);
+        ctx.fill();
+        
+        // Inner shadow for depth
+        ctx.fillStyle = podiumShadows[rankIndex];
+        ctx.fillRect(x + 5, y + height - 15, 170, 10);
+        
+        // Medal with better contrast
+        ctx.fillStyle = '#2C2C2C';
+        ctx.font = 'bold 45px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(medals[rankIndex], x + 90, y + 70);
+        
+        // Area name with better font
+        ctx.fillStyle = '#1A1A1A';
+        ctx.font = 'bold 22px Arial, sans-serif';
+        const areaName = ranking[rankIndex] || '';
+        ctx.fillText(areaName, x + 90, y + height - 22);
+      });
+
+      // Explanation cards section with adjusted spacing - REMOVED
+      // const cardY = 480;
+      // const cardHeight = 95;
+      // const cardSpacing = 108;
+      
+      // ranking.forEach((area, index) => {
+      //   ... cards code removed ...
+      // });
+
+      // Final message with better positioning
+      ctx.fillStyle = '#C97A1C';
+      ctx.font = 'bold 34px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`✨ Sua área de maior afinidade é ${ranking[0]}!`, 540, 560);
+
+      // Footer with improved design
+      ctx.fillStyle = 'rgba(200, 200, 200, 0.2)';
+      ctx.fillRect(0, 650, 1080, 430);
+      
+      // Footer logo
+      if (logoImg.complete && logoImg.naturalWidth > 0) {
+        const footerLogoHeight = 55;
+        const footerLogoWidth = (logoImg.naturalWidth / logoImg.naturalHeight) * footerLogoHeight;
+        ctx.drawImage(logoImg, 540 - footerLogoWidth/2, 680, footerLogoWidth, footerLogoHeight);
+      }
+      
+      // Footer text with better typography
+      ctx.fillStyle = '#1A1A1A';
+      ctx.font = 'bold 26px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('MeuCurso Educacional', 540, 770);
+      
+      ctx.font = '20px Arial, sans-serif';
+      ctx.fillStyle = '#555555';
+      ctx.fillText('meucurso.com.br/teste-vocacional', 540, 800);
+
+      // Download image
+      const link = document.createElement('a');
+      link.download = 'meu-resultado-oab.png';
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+    };
+
+    // Try to load logo, but proceed even if it fails
+    logoImg.onload = drawContent;
+    logoImg.onerror = drawContent;
+    logoImg.src = 'https://meucurso.com.br/_next/image?url=%2Flogos%2Fmeu_curso.webp&w=256&q=75';
+  };
+
+  const goToPlatform = () => {
+    window.open('https://meucurso.com.br', '_blank');
+  };
 
   const test = tests[currentTestIndex]?.data || null;
 
@@ -365,6 +616,25 @@ const Result: React.FC = () => {
             <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6', wordBreak: 'break-word' }}>
               Com base em suas respostas, você mostrou maior afinidade com esta área. Comece seus estudos e boa sorte na prova!
             </p>
+            
+            <ShareSection>
+              <ShareTitle>📤 Compartilhar Resultado</ShareTitle>
+              <ShareDescription>
+                Mostre para seus amigos e colegas qual sua área de afinidade na OAB!
+              </ShareDescription>
+              <ShareButtons>
+                <ShareButton className="whatsapp" onClick={shareOnWhatsApp}>
+                  💬 WhatsApp
+                </ShareButton>
+                <ShareButton className="instagram" onClick={generateImageForSocial}>
+                  📷 Criar Imagem
+                </ShareButton>
+                <ShareButton className="platform" onClick={goToPlatform}>
+                  🎓 Ir para MeuCurso
+                </ShareButton>
+              </ShareButtons>
+            </ShareSection>
+            
             <ButtonGroup>
               {tests.length < 3 && (
                 <SecondaryButton onClick={() => window.location.href = '/quiz'} style={{ background: 'linear-gradient(135deg, #FF9800, #F57C00)', boxShadow: '0 4px 12px rgba(255, 152, 0, 0.3)' }}>

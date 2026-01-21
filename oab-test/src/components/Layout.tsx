@@ -8,11 +8,23 @@ const LayoutContainer = styled.div`
   height: 100vh;
   width: 100%;
   background: white;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
-const SidebarWrapper = styled.div`
+const SidebarWrapper = styled.div<{ isOpen?: boolean }>`
   @media (max-width: 768px) {
-    position: relative;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    width: 100%;
+    height: calc(100vh - 60px);
+    z-index: 50;
+    display: ${props => props.isOpen ? 'block' : 'none'};
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -66,16 +78,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, title = 'Teste Vocacio
 
   return (
     <LayoutContainer>
-      <SidebarWrapper>
+      <SidebarWrapper isOpen={sidebarOpen}>
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       </SidebarWrapper>
       
       <MainContent>
         <TopBarWrapper>
-          <TopBar title={title} />
+          <TopBar title={title} onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
         </TopBarWrapper>
         
-        <ContentWrapper>
+        <ContentWrapper onClick={() => setSidebarOpen(false)}>
           {children}
         </ContentWrapper>
       </MainContent>

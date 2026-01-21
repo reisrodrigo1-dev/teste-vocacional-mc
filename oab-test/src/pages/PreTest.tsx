@@ -209,8 +209,7 @@ const PreTest: React.FC = () => {
             
             <FormGroup>
               <Label>📋 Qual prova prestará?</Label>
-              <Select value={examEdition} onChange={(e) => setExamEdition(e.target.value as '45' | '46' | '47' | '48')}>
-                <option value="45">45ª</option>
+              <Select value={examEdition} onChange={(e) => setExamEdition(e.target.value as '46' | '47' | '48')}>
                 <option value="46">46ª</option>
                 <option value="47">47ª</option>
                 <option value="48">48ª</option>

@@ -9,12 +9,18 @@ const TopBarContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   background: white;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 1rem;
   border-bottom: 1px solid #e8e8e8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    padding: 0.8rem 0.75rem;
+    gap: 0.75rem;
+  }
 `;
 
 const LogoSection = styled.div`
@@ -24,6 +30,30 @@ const LogoSection = styled.div`
   font-size: 1.8rem;
   font-weight: 700;
   color: #4CAF50;
+  min-width: fit-content;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    gap: 0.5rem;
+    min-width: auto;
+  }
+`;
+
+const MenuButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #333;
+  flex-shrink: 0;
+  order: -1;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
 const TitleSection = styled.div`
@@ -32,12 +62,22 @@ const TitleSection = styled.div`
   font-size: 1.2rem;
   font-weight: 600;
   color: #333;
+  min-width: 0;
+
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+    flex: 0.8;
+  }
 `;
 
 const UserSection = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    gap: 0.5rem;
+  }
 `;
 
 const UserInfo = styled.div`
@@ -47,12 +87,21 @@ const UserInfo = styled.div`
   padding: 0.5rem 1rem;
   background: #f5f5f5;
   border-radius: 12px;
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+  }
 `;
 
 const UserName = styled.span`
   font-weight: 600;
   color: #333;
   font-size: 0.95rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Avatar = styled.div`
@@ -67,12 +116,18 @@ const Avatar = styled.div`
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
 `;
 
 const Menu = styled.div<{ isOpen: boolean }>`
   position: absolute;
   top: 60px;
-  right: 2rem;
+  right: 1rem;
   background: white;
   border: 1px solid #e8e8e8;
   border-radius: 12px;
@@ -115,9 +170,10 @@ const MenuItem = styled.button`
 
 interface TopBarProps {
   title?: string;
+  onMenuClick?: () => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ title = 'Teste Vocacional OAB' }) => {
+export const TopBar: React.FC<TopBarProps> = ({ title = 'Teste Vocacional OAB', onMenuClick }) => {
   const [userName, setUserName] = useState('');
   const [userInitial, setUserInitial] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -158,8 +214,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title = 'Teste Vocacional OAB' }
 
   return (
     <TopBarContainer>
+      <MenuButton onClick={onMenuClick}>☰</MenuButton>
       <LogoSection>
-        🎓 MeuCurso
+        
       </LogoSection>
       <TitleSection>{title}</TitleSection>
       <UserSection>
