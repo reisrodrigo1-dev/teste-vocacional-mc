@@ -165,13 +165,18 @@ const PreTest: React.FC = () => {
     e.preventDefault();
     if (!auth.currentUser) return;
     try {
-      const updatedUser = {
+      const updatedUser: any = {
         graduationStatus,
-        period: graduationStatus === 'Não' ? period : undefined,
         examEdition,
         studyHours,
         difficulties,
       };
+      
+      // Apenas adicionar period se o usuário não for formado
+      if (graduationStatus === 'Não') {
+        updatedUser.period = period;
+      }
+      
       // Use setDoc with merge to create or update the document
       await setDoc(doc(db, 'users', auth.currentUser.uid), updatedUser, { merge: true });
       navigate('/quiz');
