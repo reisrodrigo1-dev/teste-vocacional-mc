@@ -50,16 +50,16 @@ const Podium = styled.div`
   justify-content: center;
   align-items: flex-end;
   margin: 2rem 0;
-  gap: 0.8rem;
+  gap: 0.5rem;
   perspective: 1000px;
   flex-wrap: wrap;
   @media (max-width: 768px) {
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 `;
 
 const Place = styled.div<{ position: 'first' | 'second' | 'third'; height: number; color: string }>`
-  width: 100px;
+  width: 120px;
   height: ${props => props.height}px;
   background: linear-gradient(180deg, ${props => props.color}dd, ${props => props.color});
   display: flex;
@@ -85,7 +85,11 @@ const Place = styled.div<{ position: 'first' | 'second' | 'third'; height: numbe
   }} both;
   
   @media (max-width: 768px) {
-    width: 80px;
+    width: 100px;
+  }
+  
+  @media (max-width: 600px) {
+    width: 85px;
   }
   
   @keyframes popIn {
@@ -109,21 +113,32 @@ const Medal = styled.div`
 `;
 
 const PlaceNumber = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   opacity: 0.9;
   margin-bottom: 0rem;
   margin-top: 0.5rem;
   font-weight: bold;
+  @media (max-width: 768px) {
+    font-size: 0.65rem;
+  }
 `;
 
 const AreaName = styled.div`
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-align: center;
   padding: 0 0.25rem;
-  line-height: 1.3;
+  line-height: 1.2;
   word-break: break-word;
-  max-width: 100px;
+  max-width: 110px;
   margin-bottom: 0rem;
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    max-width: 90px;
+  }
+  @media (max-width: 600px) {
+    font-size: 0.75rem;
+    max-width: 75px;
+  }
 `;
 
 const Message = styled.p`
@@ -366,7 +381,7 @@ const Result: React.FC = () => {
   }, []);
 
   const shareOnWhatsApp = () => {
-    const url = window.location.href;
+    const url = window.location.origin;
     const text = `🎯 Descobri minha área de afinidade na OAB!\n\n✨ Meu resultado: *${test?.aiRanking?.[0] || 'Área recomendada'}*\n\nFaça o seu teste também: ${url}\n\n📚 Via MeuCurso Educacional`;
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, '_blank');
