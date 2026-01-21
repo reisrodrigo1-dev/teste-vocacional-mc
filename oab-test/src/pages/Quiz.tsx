@@ -1131,20 +1131,21 @@ Com base em AFINIDADE como critério primário, nos dados reais de aprovação,
 desmistificando os mitos, e considerando que a prova é consultável (tornando a afinidade intuitiva),
 ranqueie as 7 áreas de forma DECRESCENTE de recomendação.
 
-PARA AS EXPLICAÇÕES: Seja ESPECÍFICO e PESSOAL. Cite APENAS dados compreensíveis e diretos das respostas do usuário:
+PARA AS EXPLICAÇÕES: Seja ESPECÍFICO e PESSOAL. Use SEGUNDA PESSOA (você, seu, sua) para falar DIRETAMENTE com o usuário.
+Cite APENAS dados compreensíveis e diretos das respostas do usuário:
 - Afinidades que ele declarou
 - Experiência prática que possui
 - Peças processuais que o interessaram
 - Processualista em que tem facilidade
-Explique POR QUE cada área faz sentido para ESTE usuário. NÃO mencione scores, pontos ou cálculos - use linguagem acessível.
+Explique POR QUE esta área faz sentido PARA ELE. NÃO mencione scores, pontos ou cálculos - use linguagem acessível e conversacional.
 
 RETORNE OBRIGATORIAMENTE um JSON neste EXATO formato (sem markdown, sem explicações extras):
 {
   "ranking": ["Área1", "Área2", "Área3", "Área4", "Área5", "Área6", "Área7"],
   "explanations": {
-    "Área1": "Explicação personalizada (2-3 linhas) clara e acessível. Cite o que o usuário respondeu e por que faz sentido.",
-    "Área2": "Explicação personalizada (2-3 linhas) clara e acessível",
-    "Área3": "Explicação personalizada (2-3 linhas) clara e acessível"
+    "Área1": "Explicação personalizada em SEGUNDA PESSOA (2-3 linhas) clara e acessível. Fale com o usuário: 'Você demonstrou...', 'Sua afinidade...', 'Com sua experiência em...', etc.",
+    "Área2": "Explicação personalizada em SEGUNDA PESSOA (2-3 linhas) clara e acessível",
+    "Área3": "Explicação personalizada em SEGUNDA PESSOA (2-3 linhas) clara e acessível"
   }
 }
 
