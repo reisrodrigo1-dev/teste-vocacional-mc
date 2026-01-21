@@ -502,31 +502,6 @@ const NewsImageHint = styled.p`
   }
 `;
 
-const NewsTitle = styled.h4`
-  font-size: 1.05rem;
-  color: #1a1a1a;
-  margin: 1rem 0 0.5rem 0;
-  font-weight: 700;
-  line-height: 1.3;
-
-  @media (max-width: 600px) {
-    font-size: 0.9rem;
-    margin: 0.5rem 0 0.3rem 0;
-  }
-`;
-
-const NewsText = styled.p`
-  font-size: 0.95rem;
-  color: #555;
-  margin: 0;
-  line-height: 1.4;
-
-  @media (max-width: 600px) {
-    font-size: 0.8rem;
-    line-height: 1.3;
-  }
-`;
-
 const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   position: relative;
   width: 100%;
@@ -1098,12 +1073,12 @@ const Quiz: React.FC = () => {
     // Prepare news summary for AI
     const newsLiked = Object.entries(responses.newsVotes || {})
       .filter(([, liked]) => liked === true)
-      .map(([newsId]) => filteredNewsData.find(n => n.id === newsId)?.title)
+      .map(([newsId]) => filteredNewsData.find(n => n.id === newsId)?.area || 'Unknown')
       .join(', ');
     
     const newsDisliked = Object.entries(responses.newsVotes || {})
       .filter(([, liked]) => liked === false)
-      .map(([newsId]) => filteredNewsData.find(n => n.id === newsId)?.title)
+      .map(([newsId]) => filteredNewsData.find(n => n.id === newsId)?.area || 'Unknown')
       .join(', ');
 
     // Send to AI with detailed scoring analysis
