@@ -489,19 +489,6 @@ const NewsCard = styled.div`
   }
 `;
 
-const NewsImageHint = styled.p`
-  font-size: 0.85rem;
-  color: #999;
-  text-align: center;
-  margin: 0.5rem 0 0 0;
-  font-style: italic;
-
-  @media (max-width: 600px) {
-    font-size: 0.75rem;
-    margin: 0.3rem 0 0 0;
-  }
-`;
-
 const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   position: relative;
   width: 100%;
@@ -1274,7 +1261,6 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                         }}
                       />
                     </NewsImageContainer>
-                    <NewsImageHint>👆 Clique na imagem para ampliar</NewsImageHint>
                     <NewsVoteContainer>
                       <VoteButton
                         type="like"
