@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { doc, getDoc, setDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { doc, setDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import type { TestResponse, Area } from '../types';
 import { Layout } from '../components/Layout';
@@ -346,10 +346,6 @@ const Result: React.FC = () => {
 
       // Demotivated
       test.demotivated?.forEach(area => { scores[area]--; });
-
-      const scoresSummary = areas
-        .map(area => `${area}: ${scores[area]} pontos`)
-        .join('\n');
 
       const prompt = `Você é um consultor vocacional especializado em OAB. Baseado nas respostas e scores de um candidato, ranqueie as 7 áreas de direito.
 

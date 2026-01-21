@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import type { Area, TestResponse } from '../types';
 import openai from '../openai';
 import { Layout } from '../components/Layout';
-import { getRandomNews, newsData } from '../data/news';
+import { newsData } from '../data/news';
 
 const Container = styled.div`
   display: flex;
@@ -364,17 +364,6 @@ const NewsImageContainer = styled.div`
     object-fit: contain;
     background: white;
   }
-`;
-
-const NewsTitle = styled.div`
-  display: none;
-  padding: 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #333;
-  min-height: 50px;
-  display: flex;
-  align-items: center;
 `;
 
 const NewsVoteContainer = styled.div`
