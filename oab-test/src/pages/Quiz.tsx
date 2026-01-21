@@ -46,6 +46,10 @@ const Header = styled.div`
       transform: translateY(0);
     }
   }
+
+  @media (max-width: 600px) {
+    margin-bottom: 1.25rem;
+  }
 `;
 
 const StepCounter = styled.p`
@@ -53,6 +57,10 @@ const StepCounter = styled.p`
   margin: 0;
   opacity: 0.9;
   color: #333;
+
+  @media (max-width: 600px) {
+    font-size: 0.85rem;
+  }
 `;
 
 const ProgressBar = styled.div`
@@ -63,6 +71,11 @@ const ProgressBar = styled.div`
   border-radius: 3px;
   overflow: hidden;
   margin: 1rem 0;
+
+  @media (max-width: 600px) {
+    margin: 0.75rem 0;
+    height: 5px;
+  }
 `;
 
 const ProgressFill = styled.div<{ percentage: number }>`
@@ -104,6 +117,7 @@ const QuestionContainer = styled.div`
 
     &.news-container {
       padding: 1.25rem;
+      max-width: 100%;
     }
   }
   
@@ -132,8 +146,9 @@ const QuestionTitle = styled.h2`
   }
 
   @media (max-width: 600px) {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 1rem;
+    line-height: 1.3;
   }
 `;
 
@@ -142,6 +157,11 @@ const ButtonGroup = styled.div`
   gap: 1rem;
   margin-top: 2rem;
   justify-content: space-between;
+
+  @media (max-width: 600px) {
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
 `;
 
 const Button = styled.button`
@@ -155,6 +175,7 @@ const Button = styled.button`
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
   flex: 1;
+  font-size: 1rem;
   
   &:hover {
     transform: translateY(-2px);
@@ -166,10 +187,10 @@ const Button = styled.button`
     cursor: not-allowed;
     transform: none;
   }
-  
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+
+  @media (max-width: 600px) {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -177,6 +198,10 @@ const CheckboxGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+
+  @media (max-width: 600px) {
+    gap: 0.4rem;
+  }
 `;
 
 const CheckboxLabel = styled.label`
@@ -189,6 +214,7 @@ const CheckboxLabel = styled.label`
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
+  font-size: 0.95rem;
   
   &:hover:not(:has(input:disabled)) {
     border-color: #4CAF50;
@@ -214,6 +240,11 @@ const CheckboxLabel = styled.label`
     background: #e8f5e9;
     border-color: #4CAF50;
   }
+
+  @media (max-width: 600px) {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const SelectInput = styled.select`
@@ -234,12 +265,24 @@ const SelectInput = styled.select`
     border-color: #4CAF50;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
   }
+
+  @media (max-width: 600px) {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
 `;
 
 const ErrorText = styled.p`
   color: #c62828;
   margin-top: 1rem;
   font-weight: 600;
+  font-size: 0.95rem;
+
+  @media (max-width: 600px) {
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+  }
 `;
 
 const RankingContainer = styled.div`
@@ -247,6 +290,11 @@ const RankingContainer = styled.div`
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 1.5rem;
+
+  @media (max-width: 600px) {
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
 `;
 
 const RankingSelect = styled.div`
@@ -292,12 +340,32 @@ const RankingSelect = styled.div`
       padding: 0.5rem;
     }
   }
+
+  @media (max-width: 600px) {
+    gap: 0.75rem;
+    
+    label {
+      min-width: 60px;
+      font-size: 0.9rem;
+    }
+
+    select {
+      padding: 0.75rem 0.75rem;
+      font-size: 0.9rem;
+      padding-right: 2rem;
+    }
+  }
 `;
 
 const TextAreaSection = styled.div`
   display: grid;
   gap: 2rem;
   margin-top: 2rem;
+
+  @media (max-width: 600px) {
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
 `;
 
 const AreaBlock = styled.div`
@@ -319,6 +387,15 @@ const AreaBlock = styled.div`
     font-size: 1.1rem;
     color: #333;
     margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    padding: 1rem;
+    gap: 0.75rem;
+
+    h4 {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -343,6 +420,7 @@ const TextAreaInput = styled.textarea`
   min-height: 80px;
   transition: all 0.3s ease;
   background: white;
+  box-sizing: border-box;
   
   &::placeholder {
     color: #999;
@@ -356,6 +434,12 @@ const TextAreaInput = styled.textarea`
   
   &:hover {
     border-color: #4CAF50;
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.9rem;
+    min-height: 70px;
   }
 `;
 
@@ -501,6 +585,11 @@ const NewsVoteContainer = styled.div`
     gap: 0.75rem;
     padding: 1rem;
   }
+
+  @media (max-width: 600px) {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
 `;
 
 const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' | 'none' }>`
@@ -537,6 +626,12 @@ const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' | 
 
   &:active {
     transform: scale(0.95);
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.5rem 0.9rem;
+    font-size: 1rem;
+    border-radius: 6px;
   }
 `;
 
