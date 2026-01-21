@@ -530,11 +530,12 @@ const NewsText = styled.p`
 const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   position: relative;
   width: 100%;
-  padding-top: 25%;
+  padding-top: 60%;
   background: #e0e0e0;
   overflow: hidden;
   border-radius: 12px;
   cursor: pointer;
+  min-height: 300px;
 
   img {
     position: absolute;
@@ -552,8 +553,8 @@ const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   }
 
   @media (max-width: 768px) {
-    padding-top: 75%;
-    min-height: 200px;
+    padding-top: 80%;
+    min-height: 250px;
 
     img {
       object-fit: contain;
@@ -565,8 +566,8 @@ const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   }
 
   @media (max-width: 600px) {
-    padding-top: 80%;
-    min-height: 150px;
+    padding-top: 100%;
+    min-height: 200px;
   }
 `;
 
@@ -1291,16 +1292,14 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                   <NewsCard key={news.id}>
                     <NewsImageContainer onClick={() => setZoomedImageId(news.id)}>
                       <img 
-                        src={`/noticias/${news.image}`} 
-                        alt={news.title}
+                        src={`/news/${news.image}`} 
+                        alt={`${news.area} news`}
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder.jpg';
                         }}
                       />
                     </NewsImageContainer>
                     <NewsImageHint>👆 Clique na imagem para ampliar</NewsImageHint>
-                    <NewsTitle>{news.title}</NewsTitle>
-                    <NewsText>{news.text}</NewsText>
                     <NewsVoteContainer>
                       <VoteButton
                         type="like"
@@ -1505,7 +1504,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
         {zoomedImageId && (
           <ImageModal isOpen={!!zoomedImageId}>
             <img 
-              src={`/noticias/${filteredNewsData.find(n => n.id === zoomedImageId)?.image}`}
+              src={`/news/${filteredNewsData.find(n => n.id === zoomedImageId)?.image}`}
               alt="Zoomed news"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder.jpg';
