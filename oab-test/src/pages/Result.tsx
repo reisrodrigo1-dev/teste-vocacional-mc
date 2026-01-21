@@ -65,7 +65,8 @@ const Place = styled.div<{ position: 'first' | 'second' | 'third'; height: numbe
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  padding-top: 0.8rem;
   padding-bottom: 0.8rem;
   border-radius: 15px 15px 0 0;
   color: white;
@@ -101,7 +102,7 @@ const Place = styled.div<{ position: 'first' | 'second' | 'third'; height: numbe
 
 const Medal = styled.div`
   font-size: 2.2rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0rem;
   @media (max-width: 768px) {
     font-size: 1.8rem;
   }
@@ -110,7 +111,8 @@ const Medal = styled.div`
 const PlaceNumber = styled.div`
   font-size: 0.8rem;
   opacity: 0.9;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0rem;
+  margin-top: 0.5rem;
   font-weight: bold;
 `;
 
@@ -121,10 +123,11 @@ const AreaName = styled.div`
   line-height: 1.3;
   word-break: break-word;
   max-width: 100px;
+  margin-bottom: 0rem;
 `;
 
 const Message = styled.p`
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   margin: 2rem 0 1.5rem 0;
   font-weight: 600;
   color: #4CAF50;
@@ -588,12 +591,16 @@ const Result: React.FC = () => {
             </TestSelector>
           )}
           
+          <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
+            <Message>✨ Sua área de maior afinidade é <strong>{ranking[0]}</strong>!</Message>
+          </div>
+          
           <Podium>
             {podiumOrder.map((item) => (
               <Place key={item.area} position={item.position} height={item.height} color={item.color}>
                 <Medal>{item.medal}</Medal>
-                <PlaceNumber>{item.place}</PlaceNumber>
                 <AreaName>{item.area}</AreaName>
+                <PlaceNumber>{item.place}</PlaceNumber>
               </Place>
             ))}
           </Podium>
@@ -612,7 +619,6 @@ const Result: React.FC = () => {
           </ExplanationSection>
           
           <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-            <Message>✨ Sua área de maior afinidade é <strong>{ranking[0]}</strong>!</Message>
             <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6', wordBreak: 'break-word' }}>
               Com base em suas respostas, você mostrou maior afinidade com esta área. Comece seus estudos e boa sorte na prova!
             </p>

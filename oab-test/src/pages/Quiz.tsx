@@ -775,6 +775,9 @@ const Quiz: React.FC = () => {
   const filteredNewsData = getFilteredNewsData();
 
   const areas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário', 'Consumidor', 'Humanos', 'Ambiental', 'Internacional', 'Criança e Adolescente', 'Outra área'];
+  
+  // 7 áreas principais para perguntas de ranking
+  const mainAreas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário'];
 
   const questions = [
     {
@@ -805,7 +808,7 @@ const Quiz: React.FC = () => {
     {
       type: 'ranking',
       question: 'Considerando afinidade, qual é a área que você faria?',
-      options: areas,
+      options: mainAreas,
       key: 'affinity',
     },
     {
@@ -828,19 +831,20 @@ const Quiz: React.FC = () => {
     {
       type: 'ranking',
       question: 'Considerando afinidade, qual é a área que você NUNCA faria?',
-      options: areas,
+      options: mainAreas,
       key: 'neverDo',
     },
     {
       type: 'multiSelect',
       question: 'Alguma área já fez repescagem por diversas vezes e sente desmotivação?',
-      options: areas,
+      options: mainAreas,
       key: 'demotivated',
+      optional: true,
     },
     {
       type: 'textAreas',
       question: 'Em poucas palavras, por que você escolheria ou não cada área?',
-      areas: areas,
+      areas: mainAreas,
       key: 'reasons',
       optional: true,
     },
