@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import { Layout } from '../components/Layout';
 
 const Container = styled.div`
   display: flex;
@@ -11,11 +12,11 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #4CAF50 0%, #9C27B0 100%);
+  min-height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 2rem;
+  padding: 3rem 2rem;
   box-sizing: border-box;
 `;
 
@@ -23,7 +24,7 @@ const Card = styled.div`
   background: white;
   padding: 3rem 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 420px;
   animation: slideUp 0.5s ease-out;
@@ -213,25 +214,26 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Card>
-        <Logo>🎓 MeuCurso</Logo>
-        <Subtitle>Criar Conta</Subtitle>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Form onSubmit={handleSubmit}>
-          <div>
-            <Label>Nome Completo</Label>
-            <Input
-              type="text"
-              placeholder="Seu nome completo"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <Label>CPF</Label>
-            <Input
+    <Layout title="Cadastro">
+      <Container>
+        <Card>
+          <Logo>🎓 MeuCurso</Logo>
+          <Subtitle>Criar Conta</Subtitle>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Form onSubmit={handleSubmit}>
+            <div>
+              <Label>Nome Completo</Label>
+              <Input
+                type="text"
+                placeholder="Seu nome completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label>CPF</Label>
+              <Input
               type="text"
               placeholder="123.456.789-10"
               value={cpf}
@@ -275,7 +277,8 @@ const Register: React.FC = () => {
           Já tem conta? <Link onClick={() => navigate('/login')}>Entrar</Link>
         </LinkWrapper>
       </Card>
-    </Container>
+      </Container>
+    </Layout>
   );
 };
 

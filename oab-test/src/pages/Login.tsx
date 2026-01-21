@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import { Layout } from '../components/Layout';
 
 const Container = styled.div`
   display: flex;
@@ -10,11 +11,11 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
-  background: linear-gradient(135deg, #4CAF50 0%, #9C27B0 100%);
+  min-height: calc(100vh - 60px);
+  background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 2rem;
+  padding: 3rem 2rem;
   box-sizing: border-box;
 `;
 
@@ -22,7 +23,7 @@ const Card = styled.div`
   background: white;
   padding: 3rem 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
   animation: slideUp 0.5s ease-out;
@@ -189,38 +190,40 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Card>
-        <LogoContainer>
-          <LogoImage src="https://meucurso.com.br/_next/image?url=%2Flogos%2Fmeu_curso.webp&w=256&q=75" alt="Meu Curso" onError={(e) => {
-            (e.target as HTMLImageElement).style.display = 'none';
-          }} />
-          <Logo>🎓 MeuCurso</Logo>
-        </LogoContainer>
-        <Subtitle>Teste Vocacional OAB</Subtitle>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Form onSubmit={handleSubmit}>
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <Button type="submit" disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</Button>
-        </Form>
-        <LinkWrapper>
-          Não tem conta? <Link onClick={() => navigate('/register')}>Cadastrar</Link>
-        </LinkWrapper>
-      </Card>
-    </Container>
+    <Layout title="Login">
+      <Container>
+        <Card>
+          <LogoContainer>
+            <LogoImage src="https://meucurso.com.br/_next/image?url=%2Flogos%2Fmeu_curso.webp&w=256&q=75" alt="Meu Curso" onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }} />
+            <Logo>🎓 MeuCurso</Logo>
+          </LogoContainer>
+          <Subtitle>Teste Vocacional</Subtitle>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Form onSubmit={handleSubmit}>
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</Button>
+          </Form>
+          <LinkWrapper>
+            Não tem conta? <Link onClick={() => navigate('/register')}>Cadastrar</Link>
+          </LinkWrapper>
+        </Card>
+      </Container>
+    </Layout>
   );
 };
 
