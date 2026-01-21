@@ -483,6 +483,10 @@ const NewsCard = styled.div`
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
   }
+
+  @media (max-width: 600px) {
+    gap: 0.5rem;
+  }
 `;
 
 const NewsImageHint = styled.p`
@@ -491,6 +495,11 @@ const NewsImageHint = styled.p`
   text-align: center;
   margin: 0.5rem 0 0 0;
   font-style: italic;
+
+  @media (max-width: 600px) {
+    font-size: 0.75rem;
+    margin: 0.3rem 0 0 0;
+  }
 `;
 
 const NewsTitle = styled.h4`
@@ -501,8 +510,8 @@ const NewsTitle = styled.h4`
   line-height: 1.3;
 
   @media (max-width: 600px) {
-    font-size: 0.95rem;
-    margin: 0.75rem 0 0.4rem 0;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0.3rem 0;
   }
 `;
 
@@ -513,7 +522,8 @@ const NewsText = styled.p`
   line-height: 1.4;
 
   @media (max-width: 600px) {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    line-height: 1.3;
   }
 `;
 
@@ -542,8 +552,8 @@ const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   }
 
   @media (max-width: 768px) {
-    padding-top: 100%;
-    min-height: 250px;
+    padding-top: 75%;
+    min-height: 200px;
 
     img {
       object-fit: contain;
@@ -555,8 +565,8 @@ const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   }
 
   @media (max-width: 600px) {
-    padding-top: 100%;
-    min-height: 200px;
+    padding-top: 80%;
+    min-height: 150px;
   }
 `;
 
@@ -1398,7 +1408,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
   };
 
   return (
-    <Layout title="📝 Quiz - Teste Vocacional">
+    <Layout title="📝 Teste Vocacional MeuCurso">
       {isLoading && (
         <LoadingScreen>
           <LoadingSpinner />

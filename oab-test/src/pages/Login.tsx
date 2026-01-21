@@ -197,9 +197,9 @@ const Login: React.FC = () => {
             <LogoImage src="https://meucurso.com.br/_next/image?url=%2Flogos%2Fmeu_curso.webp&w=256&q=75" alt="Meu Curso" onError={(e) => {
               (e.target as HTMLImageElement).style.display = 'none';
             }} />
-            <Logo>🎓 MeuCurso</Logo>
+            <Logo>Teste Vocacional</Logo>
           </LogoContainer>
-          <Subtitle>Teste Vocacional</Subtitle>
+          <Subtitle>Veja qual sua área de 2ª fase</Subtitle>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <Form onSubmit={handleSubmit}>
             <Input
