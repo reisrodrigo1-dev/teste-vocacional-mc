@@ -837,7 +837,7 @@ const Quiz: React.FC = () => {
     {
       type: 'multiSelect',
       question: 'Alguma área já fez repescagem por diversas vezes e sente desmotivação?',
-      options: mainAreas,
+      options: [...mainAreas, 'Nenhuma'],
       key: 'demotivated',
       optional: true,
     },
