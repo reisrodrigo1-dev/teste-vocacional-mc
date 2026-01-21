@@ -393,11 +393,11 @@ const Result: React.FC = () => {
     if (!ctx) return;
 
     canvas.width = 1080;
-    canvas.height = 1080;
+    canvas.height = 1100;
 
-    // Background cinza bem claro (sem gradient)
-    ctx.fillStyle = '#F5F5F5';
-    ctx.fillRect(0, 0, 1080, 1080);
+    // Background cinza bem claro
+    ctx.fillStyle = '#F5F0E8';
+    ctx.fillRect(0, 0, 1080, 1500);
 
     // Load and draw logo
     const logoImg = new Image();
@@ -405,127 +405,113 @@ const Result: React.FC = () => {
     
     const drawContent = () => {
       // Background cinza bem claro
-      ctx.fillStyle = '#F5F5F5';
-      ctx.fillRect(0, 0, 1080, 1080);
+      ctx.fillStyle = '#F5F0E8';
+      ctx.fillRect(0, 0, 1080, 1100);
 
-      // Header background com opacidade
-      ctx.fillStyle = 'rgba(200, 200, 200, 0.2)';
-      ctx.fillRect(0, 0, 1080, 140);
+      // Header background branco
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, 1080, 120);
       
       // Logo (maintain aspect ratio)
       if (logoImg.complete && logoImg.naturalWidth > 0) {
-        const logoHeight = 60;
+        const logoHeight = 40;
         const logoWidth = (logoImg.naturalWidth / logoImg.naturalHeight) * logoHeight;
-        ctx.drawImage(logoImg, 50, 30, logoWidth, logoHeight);
+        ctx.drawImage(logoImg, 40, 15, logoWidth, logoHeight);
       }
 
-      // Logo text
-      ctx.fillStyle = '#1A1A1A';
-      ctx.font = 'bold 32px Arial, sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText('', 160, 75);
-
-      // Title with better positioning
-      ctx.fillStyle = '#1A1A1A';
-      ctx.font = 'bold 48px Arial, sans-serif';
+      // Header title - TESTE VOCACIONAL
+      ctx.fillStyle = '#333333';
+      ctx.font = '16px Arial, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('🎯 Teste Vocacional OAB', 540, 160);
+      ctx.fillText('TESTE VOCACIONAL DA ÁREA DE 2ª FASE OAB', 540, 100);
 
-      // Podium section with adjusted colors
+      // Emojis de pessoas
+      ctx.font = '48px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('😊😊😊😊', 540, 160);
+
+      // Saudação
+      ctx.fillStyle = '#333333';
+      ctx.font = 'bold 40px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      const userName = auth.currentUser?.displayName?.split(' ')[0] || 'você';
+      ctx.fillText(`Parabéns,`, 540, 220);
+
+      // "Sua área de maior afinidade é"
+      ctx.fillStyle = '#E8A740';
+      ctx.font = '24px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ Sua área de maior afinidade é', 540, 270);
+
+      // Pódio
       const ranking = test?.aiRanking?.slice(0, 3) || [];
-      const podiumColors = ['#FFE066', '#F0EDD4', '#E8965A']; // Cores mais suaves
-      const podiumShadows = ['#E6C700', '#D4D0B8', '#CC7A3C']; // Sombras
+      const podiumColors = ['#E8D4A0', '#FFE066', '#D5915B']; // Cinza, Ouro, Bronze
+      const podiumShadows = ['#D4C090', '#E6C700', '#B8754A'];
       const medals = ['🥇', '🥈', '🥉'];
-      const podiumHeights = [150, 190, 130];
-      const podiumPositions = [200, 440, 680]; // 2º, 1º (centro), 3º - mais próximas
+      const podiumHeights = [140, 180, 100];
+      const podiumPositions = [150, 440, 730]; // 2º, 1º (centro), 3º
       const podiumOrder = [1, 0, 2]; // Silver, Gold, Bronze
-      
-      // Draw podium boxes with shadows
+
       podiumOrder.forEach((rankIndex, boxIndex) => {
         const x = podiumPositions[boxIndex];
-        const height = podiumHeights[boxIndex];
-        const y = 500 - height;
-        
-        // Shadow
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        ctx.beginPath();
-        ctx.moveTo(x + 15, y + 5);
-        ctx.lineTo(x + 175, y + 5);
-        ctx.quadraticCurveTo(x + 185, y + 5, x + 185, y + 15);
-        ctx.lineTo(x + 185, y + height - 5);
-        ctx.quadraticCurveTo(x + 185, y + height + 5, x + 175, y + height + 5);
-        ctx.lineTo(x + 15, y + height + 5);
-        ctx.quadraticCurveTo(x + 5, y + height + 5, x + 5, y + height - 5);
-        ctx.lineTo(x + 5, y + 15);
-        ctx.quadraticCurveTo(x + 5, y + 5, x + 15, y + 5);
-        ctx.fill();
-        
-        // Podium box
+        const height = podiumHeights[rankIndex];
+        const y = 480 - height;
+
+        // Podium box com cantos arredondados
         ctx.fillStyle = podiumColors[rankIndex];
         ctx.beginPath();
-        ctx.moveTo(x + 10, y);
-        ctx.lineTo(x + 170, y);
-        ctx.quadraticCurveTo(x + 180, y, x + 180, y + 10);
-        ctx.lineTo(x + 180, y + height - 10);
-        ctx.quadraticCurveTo(x + 180, y + height, x + 170, y + height);
-        ctx.lineTo(x + 10, y + height);
-        ctx.quadraticCurveTo(x, y + height, x, y + height - 10);
-        ctx.lineTo(x, y + 10);
-        ctx.quadraticCurveTo(x, y, x + 10, y);
+        ctx.moveTo(x + 12, y);
+        ctx.lineTo(x + 158, y);
+        ctx.quadraticCurveTo(x + 170, y, x + 170, y + 12);
+        ctx.lineTo(x + 170, y + height - 12);
+        ctx.quadraticCurveTo(x + 170, y + height, x + 158, y + height);
+        ctx.lineTo(x + 12, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - 12);
+        ctx.lineTo(x, y + 12);
+        ctx.quadraticCurveTo(x, y, x + 12, y);
         ctx.fill();
-        
-        // Inner shadow for depth
+
+        // Inner shadow bottom
         ctx.fillStyle = podiumShadows[rankIndex];
-        ctx.fillRect(x + 5, y + height - 15, 170, 10);
-        
-        // Medal with better contrast
-        ctx.fillStyle = '#2C2C2C';
-        ctx.font = 'bold 45px Arial, sans-serif';
+        ctx.fillRect(x + 3, y + height - 10, 164, 10);
+
+        // Medal emoji
+        ctx.font = 'bold 40px Arial, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(medals[rankIndex], x + 90, y + 70);
-        
-        // Area name with better font
-        ctx.fillStyle = '#1A1A1A';
-        ctx.font = 'bold 22px Arial, sans-serif';
+        ctx.fillText(medals[rankIndex], x + 85, y + 50);
+
+        // Area name
+        ctx.fillStyle = '#333333';
+        ctx.font = 'bold 18px Arial, sans-serif';
         const areaName = ranking[rankIndex] || '';
-        ctx.fillText(areaName, x + 90, y + height - 22);
+        ctx.fillText(areaName, x + 85, y + height - 12);
       });
 
-      // Explanation cards section with adjusted spacing - REMOVED
-      // const cardY = 480;
-      // const cardHeight = 95;
-      // const cardSpacing = 108;
-      
-      // ranking.forEach((area, index) => {
-      //   ... cards code removed ...
-      // });
+      // Footer background
+      ctx.fillStyle = '#F5F0E8';
+      ctx.fillRect(0, 480, 1080, 620);
 
-      // Final message with better positioning
-      ctx.fillStyle = '#C97A1C';
-      ctx.font = 'bold 34px Arial, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`✨ Sua área de maior afinidade é ${ranking[0]}!`, 540, 560);
+      // Footer white section
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 620, 1080, 480);
 
-      // Footer with improved design
-      ctx.fillStyle = 'rgba(200, 200, 200, 0.2)';
-      ctx.fillRect(0, 650, 1080, 430);
-      
       // Footer logo
       if (logoImg.complete && logoImg.naturalWidth > 0) {
-        const footerLogoHeight = 55;
+        const footerLogoHeight = 45;
         const footerLogoWidth = (logoImg.naturalWidth / logoImg.naturalHeight) * footerLogoHeight;
         ctx.drawImage(logoImg, 540 - footerLogoWidth/2, 680, footerLogoWidth, footerLogoHeight);
       }
-      
-      // Footer text with better typography
-      ctx.fillStyle = '#1A1A1A';
-      ctx.font = 'bold 26px Arial, sans-serif';
+
+      // Footer text
+      ctx.fillStyle = '#333333';
+      ctx.font = 'bold 22px Arial, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('MeuCurso Educacional', 540, 770);
-      
-      ctx.font = '20px Arial, sans-serif';
-      ctx.fillStyle = '#555555';
-      ctx.fillText('meucurso.com.br/teste-vocacional', 540, 800);
+      ctx.fillText('MeuCurso', 540, 780);
+      ctx.fillText('EDUCACIONAL', 540, 805);
+
+      ctx.font = '14px Arial, sans-serif';
+      ctx.fillStyle = '#999999';
+      ctx.fillText('meucurso.com.br/teste-vocacional', 540, 840);
 
       // Download image
       const link = document.createElement('a');
