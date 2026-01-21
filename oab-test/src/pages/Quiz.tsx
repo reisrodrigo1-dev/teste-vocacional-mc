@@ -493,6 +493,30 @@ const NewsImageHint = styled.p`
   font-style: italic;
 `;
 
+const NewsTitle = styled.h4`
+  font-size: 1.05rem;
+  color: #1a1a1a;
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 700;
+  line-height: 1.3;
+
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+    margin: 0.75rem 0 0.4rem 0;
+  }
+`;
+
+const NewsText = styled.p`
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.4;
+
+  @media (max-width: 600px) {
+    font-size: 0.85rem;
+  }
+`;
+
 const NewsImageContainer = styled.div<{ isZoomed?: boolean }>`
   position: relative;
   width: 100%;
@@ -1228,6 +1252,8 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                       />
                     </NewsImageContainer>
                     <NewsImageHint>👆 Clique na imagem para ampliar</NewsImageHint>
+                    <NewsTitle>{news.title}</NewsTitle>
+                    <NewsText>{news.text}</NewsText>
                     <NewsVoteContainer>
                       <VoteButton
                         type="like"
