@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { doc, setDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, auth } from '../firebase';
-import type { TestResponse, Area } from '../types';
+import type { TestResponse } from '../types';
 import { Layout } from '../components/Layout';
-import openai from '../openai';
-import { newsData } from '../data/news';
 
 const Container = styled.div`
   display: flex;
@@ -238,7 +236,6 @@ const SecondaryButton = styled(Button)`
 const Result: React.FC = () => {
   const [tests, setTests] = useState<Array<{ id: string; data: TestResponse }>>([]);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [isLoadingResults, setIsLoadingResults] = useState(true);
 
   useEffect(() => {
@@ -279,153 +276,6 @@ const Result: React.FC = () => {
   }, []);
 
   const test = tests[currentTestIndex]?.data || null;
-
-  const handleRefreshAnalysis = async () => {
-    if (!test) return;
-    
-    setLoading(true);
-    try {
-      const areas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário'];
-      
-      // Recalculate scores
-      const scores: { [key in Area]: number } = {
-        Administrativo: 0,
-        Civil: 0,
-        Constitucional: 0,
-        Empresarial: 0,
-        Penal: 0,
-        Trabalho: 0,
-        Tributário: 0,
-      };
-
-      // Experience
-      test.experience?.forEach(area => { scores[area]++; });
-      test.tcc?.forEach(area => { scores[area]++; });
-
-      // Processualista
-      const processMap = {
-        'Processo Civil': ['Civil', 'Empresarial'],
-        'Processo Penal': ['Penal'],
-        'Processo do Trabalho': ['Trabalho'],
-      };
-      processMap[test.processualist]?.forEach(a => { scores[a as Area]++; });
-
-      // News votes
-      Object.entries(test.newsVotes || {}).forEach(([newsId, liked]) => {
-        const newsItem = newsData.find(n => n.id === newsId);
-        if (newsItem && liked === true) {
-          scores[newsItem.area as Area] += 1;
-        } else if (newsItem && liked === false) {
-          scores[newsItem.area as Area] -= 1;
-        }
-      });
-
-      // Affinity
-      if (test.affinityFirst) scores[test.affinityFirst] += 2;
-      if (test.affinitySecond) scores[test.affinitySecond]++;
-
-      // Procedural pieces
-      const piecesMap: { [key: string]: Area[] } = {
-        'Petição inicial de indenização (civil)': ['Civil'],
-        'Mandado de segurança (tributário, constitucional, adm)': ['Tributário', 'Constitucional', 'Administrativo'],
-        'Reclamação trabalhista (trabalho)': ['Trabalho'],
-        'Pedido de falência (empresarial)': ['Empresarial'],
-        'Apelação criminal (penal)': ['Penal'],
-        'Ação popular (constitucional e administrativo)': ['Constitucional', 'Administrativo'],
-        'Agravo de instrumento (civil e empresarial)': ['Civil', 'Empresarial'],
-        'Contestação em ação trabalhista (trabalho)': ['Trabalho'],
-        'Alegações finais em processo penal (penal)': ['Penal'],
-      };
-      test.proceduralPieces?.forEach(piece => {
-        piecesMap[piece]?.forEach(a => { scores[a]++; });
-      });
-
-      // Never do
-      if (test.neverDoFirst) scores[test.neverDoFirst] -= 2;
-      if (test.neverDoSecond) scores[test.neverDoSecond]--;
-
-      // Demotivated
-      test.demotivated?.forEach(area => { scores[area]--; });
-
-      const prompt = `Você é um consultor vocacional especializado em OAB. Baseado nas respostas e scores de um candidato, ranqueie as 7 áreas de direito.
-
-IMPORTANTE - MITOS A DESMENTIR:
-❌ Mito 1: Existe área com menor número de peças processuais
-  Verdade: O número de peças é muito parecido entre TODAS as áreas
-
-❌ Mito 2: Existem áreas com provas mais extensas e outras menos extensas  
-  Verdade: O tamanho da prova é EXATAMENTE IGUAL para todas as áreas
-
-❌ Mito 3: Penal e Trabalho são áreas mais fáceis que as outras
-  Verdade: Todas as áreas possuem provas com o MESMO grau de dificuldade
-
-DADOS REAIS - ÍNDICES DE APROVAÇÃO:
-📊 Áreas com MAIOR aprovação:
-  - Constitucional: 33% de aprovação
-  - Civil: 27% de aprovação
-
-📊 Áreas com MENOR aprovação:
-  - Penal: ~16% de aprovação
-  - Trabalho: ~16% de aprovação
-
-VERDADES FUNDAMENTAIS (use como base para recomendação):
-✅ Verdade 1: AFINIDADE é o PRIMEIRO critério de escolha
-✅ Verdade 2: A prova de 2ª fase é PRÁTICA e CONSULTÁVEL
-✅ Verdade 3: Quando há AFINIDADE, os temas tornam-se intuitivos ao procurar a resposta na legislação
-
-Com base em AFINIDADE como critério primário, nos dados reais de aprovação, 
-desmistificando os mitos, e considerando que a prova é consultável (tornando a afinidade intuitiva),
-ranqueie as 7 áreas de forma DECRESCENTE de recomendação.
-
-PARA AS EXPLICAÇÕES: Seja ESPECÍFICO e PESSOAL. Cite APENAS dados compreensíveis e diretos das respostas do usuário:
-- Afinidades que ele declarou
-- Experiência prática que possui
-- Peças processuais que o interessaram
-- Processualista em que tem facilidade
-Explique POR QUE cada área faz sentido para ESTE usuário. NÃO mencione scores, pontos ou cálculos - use linguagem acessível.
-
-RETORNE OBRIGATORIAMENTE um JSON neste EXATO formato (sem markdown, sem explicações extras):
-{
-  "ranking": ["Área1", "Área2", "Área3", "Área4", "Área5", "Área6", "Área7"],
-  "explanations": {
-    "Área1": "Explicação personalizada (2-3 linhas) clara e acessível. Cite o que o usuário respondeu e por que faz sentido.",
-    "Área2": "Explicação personalizada (2-3 linhas) clara e acessível",
-    "Área3": "Explicação personalizada (2-3 linhas) clara e acessível"
-  }
-}
-
-IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.`;
-
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }],
-      });
-
-      const responseText = completion.choices[0].message.content || '';
-      
-      try {
-        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const parsed = JSON.parse(jsonMatch[0]);
-          const updatedTest = { ...test };
-          updatedTest.aiRanking = parsed.ranking || areas;
-          updatedTest.aiExplanations = parsed.explanations || {};
-          updatedTest.scores = scores;
-          
-          await setDoc(doc(db, 'tests', auth.currentUser!.uid, 'attempts', tests[currentTestIndex].id), updatedTest);
-          const newTests = [...tests];
-          newTests[currentTestIndex] = { ...newTests[currentTestIndex], data: updatedTest };
-          setTests(newTests);
-        }
-      } catch (parseError) {
-        console.error('Failed to parse AI response:', parseError);
-      }
-    } catch (error) {
-      console.error('Error refreshing analysis:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (!test) return <Container>Carregando...</Container>;
 

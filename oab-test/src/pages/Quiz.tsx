@@ -451,7 +451,7 @@ const Quiz: React.FC = () => {
   const questions = [
     {
       type: 'multiSelect',
-      question: 'Em qual dessas áreas você tem experiência prática (como estágio, trabalho, etc).',
+      question: 'Em qual dessas áreas você tem experiência prática (como estágio, trabalho, etc)?',
       options: areas,
       key: 'experience',
       optional: true,
@@ -471,18 +471,18 @@ const Quiz: React.FC = () => {
     },
     {
       type: 'newsVoting',
-      question: 'Em relação a essas notícias... qual delas vc teria interesse em ler e se aprofundar no assunto?',
+      question: 'Em relação a essas notícias, qual delas você teria interesse em ler e se aprofundar no assunto?',
       key: 'newsVotes',
     },
     {
       type: 'ranking',
-      question: 'Considerando afinidade, qual a área que vc faria?',
+      question: 'Considerando afinidade, qual é a área que você faria?',
       options: areas,
       key: 'affinity',
     },
     {
       type: 'multiSelect',
-      question: 'Quis dessas peças processuais você gostaria de fazer na OAB? (selecione até 3)',
+      question: 'Quais dessas peças processuais você gostaria de fazer na OAB? (selecione até 3)',
       options: [
         'Petição inicial de indenização (civil)',
         'Mandado de segurança (tributário, constitucional, adm)',
@@ -499,7 +499,7 @@ const Quiz: React.FC = () => {
     },
     {
       type: 'ranking',
-      question: 'Considerando afinidade, qual a área que vc NUNCA faria?',
+      question: 'Considerando afinidade, qual é a área que você NUNCA faria?',
       options: areas,
       key: 'neverDo',
     },
@@ -551,7 +551,7 @@ const Quiz: React.FC = () => {
     if (q.type === 'newsVoting') {
       const votes = responses[q.key] || {};
       if (Object.keys(votes).length !== newsData.length) {
-        setValidationError('Vote em todas as notícias (Gosto / Não gosto).');
+        setValidationError('Vote em todas as notícias (Me interesso / Não me interesso).');
         return false;
       }
       setValidationError(null);
@@ -916,7 +916,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                           }
                         }}
                       >
-                        👍 Gosto
+                        👍 Me Interesso
                       </VoteButton>
                       <VoteButton
                         type="dislike"
@@ -932,7 +932,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
                           }
                         }}
                       >
-                        👎 Não Gosto
+                        👎 Não Me Interesso
                       </VoteButton>
                     </NewsVoteContainer>
                   </NewsCard>
