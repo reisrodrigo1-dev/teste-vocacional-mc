@@ -1,4 +1,4 @@
-export type Area = 'Administrativo' | 'Civil' | 'Constitucional' | 'Empresarial' | 'Penal' | 'Trabalho' | 'Tributário';
+export type Area = 'Administrativo' | 'Civil' | 'Constitucional' | 'Empresarial' | 'Penal' | 'Trabalho' | 'Tributário' | 'Consumidor' | 'Humanos' | 'Ambiental' | 'Internacional' | 'Criança e Adolescente' | 'Outra área';
 
 export interface User {
   id: string;

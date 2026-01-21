@@ -793,7 +793,25 @@ const Quiz: React.FC = () => {
 
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const areas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário'];
+  // Function to get 2 news per area
+  const getFilteredNewsData = () => {
+    const newsPerArea: { [key: string]: typeof newsData } = {};
+    
+    newsData.forEach((news) => {
+      if (!newsPerArea[news.area]) {
+        newsPerArea[news.area] = [];
+      }
+      if (newsPerArea[news.area].length < 2) {
+        newsPerArea[news.area].push(news);
+      }
+    });
+
+    return Object.values(newsPerArea).flat();
+  };
+
+  const filteredNewsData = getFilteredNewsData();
+
+  const areas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário', 'Consumidor', 'Humanos', 'Ambiental', 'Internacional', 'Criança e Adolescente', 'Outra área'];
 
   const questions = [
     {
@@ -897,11 +915,7 @@ const Quiz: React.FC = () => {
     }
 
     if (q.type === 'newsVoting') {
-      const votes = responses[q.key] || {};
-      if (Object.keys(votes).length !== newsData.length) {
-        setValidationError('Vote em todas as notícias (Me interesso / Não me interesso).');
-        return false;
-      }
+      // newsVoting is optional - user can skip news items
       setValidationError(null);
       return true;
     }
@@ -975,6 +989,12 @@ const Quiz: React.FC = () => {
       Penal: 0,
       Trabalho: 0,
       Tributário: 0,
+      Consumidor: 0,
+      Humanos: 0,
+      Ambiental: 0,
+      Internacional: 0,
+      'Criança e Adolescente': 0,
+      'Outra área': 0,
     };
 
     // Positive
@@ -995,14 +1015,17 @@ const Quiz: React.FC = () => {
     } else {
       scores.Trabalho += 1;
     }
-    // News interest: use new voting system
+    // News interest: use new voting system (skip null/undefined votes)
     if (responses.newsVotes) {
       Object.entries(responses.newsVotes).forEach(([newsId, liked]) => {
-        const newsItem = newsData.find(n => n.id === newsId);
-        if (newsItem && liked === true) {
-          scores[newsItem.area as Area] += 1;
-        } else if (newsItem && liked === false) {
-          scores[newsItem.area as Area] -= 1;
+        // Only score if voted (true or false), ignore skipped items (null/undefined)
+        if (liked !== null && liked !== undefined) {
+          const newsItem = filteredNewsData.find(n => n.id === newsId);
+          if (newsItem && liked === true) {
+            scores[newsItem.area as Area] += 1;
+          } else if (newsItem && liked === false) {
+            scores[newsItem.area as Area] -= 1;
+          }
         }
       });
     }
@@ -1022,7 +1045,21 @@ const Quiz: React.FC = () => {
     if (responses.neverDoFirst) scores[responses.neverDoFirst as Area] -= 2;
     if (responses.neverDoSecond) scores[responses.neverDoSecond as Area] -= 1;
     if (responses.demotivated) {
-      responses.demotivated.forEach((area: Area) => scores[area] -= 1);
+      responses.demotivated.forEach((area: Area) => {
+        scores[area] -= 1;
+        // Map new areas to existing areas when demotivated
+        if (area === 'Consumidor') scores.Civil -= 1;
+        if (area === 'Humanos') scores.Constitucional -= 1;
+        if (area === 'Ambiental') {
+          scores.Constitucional -= 1;
+          scores.Administrativo -= 1;
+        }
+        if (area === 'Internacional') scores.Constitucional -= 1;
+        if (area === 'Criança e Adolescente') {
+          scores.Civil -= 1;
+          scores.Penal -= 1;
+        }
+      });
     }
     // Reasons: for now, not scored, but sent to AI
 
@@ -1060,12 +1097,12 @@ const Quiz: React.FC = () => {
     // Prepare news summary for AI
     const newsLiked = Object.entries(responses.newsVotes || {})
       .filter(([, liked]) => liked === true)
-      .map(([newsId]) => newsData.find(n => n.id === newsId)?.title)
+      .map(([newsId]) => filteredNewsData.find(n => n.id === newsId)?.title)
       .join(', ');
     
     const newsDisliked = Object.entries(responses.newsVotes || {})
       .filter(([, liked]) => liked === false)
-      .map(([newsId]) => newsData.find(n => n.id === newsId)?.title)
+      .map(([newsId]) => filteredNewsData.find(n => n.id === newsId)?.title)
       .join(', ');
 
     // Send to AI with detailed scoring analysis
@@ -1247,7 +1284,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
         return (
           <div>
             <NewsGrid>
-              {newsData.map((news) => {
+              {filteredNewsData.map((news) => {
                 const votes = responses[q.key] || {};
                 const liked = votes[news.id];
                 return (
@@ -1468,7 +1505,7 @@ IMPORTANTE: Retorne APENAS o JSON, sem texto adicional.
         {zoomedImageId && (
           <ImageModal isOpen={!!zoomedImageId}>
             <img 
-              src={`/noticias/${newsData.find(n => n.id === zoomedImageId)?.image}`}
+              src={`/noticias/${filteredNewsData.find(n => n.id === zoomedImageId)?.image}`}
               alt="Zoomed news"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/placeholder.jpg';
