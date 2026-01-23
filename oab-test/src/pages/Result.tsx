@@ -338,6 +338,34 @@ const ShareDescription = styled.p`
   line-height: 1.5;
 `;
 
+const EbookButton = styled.button`
+  padding: 1.25rem 2rem;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    max-width: 500px;
+  }
+`;
+
 const Result: React.FC = () => {
   const [tests, setTests] = useState<Array<{ id: string; data: TestResponse }>>([]);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
@@ -623,6 +651,10 @@ const Result: React.FC = () => {
             <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6', wordBreak: 'break-word' }}>
               Com base em suas respostas, você mostrou maior afinidade com esta área. Comece seus estudos e boa sorte na prova!
             </p>
+            
+            <EbookButton onClick={() => window.open('https://meucurso.com.br/ebookescolha2afase', '_blank')}>
+              📚 Baixe o e-book Escolha de Área de 2ª Fase
+            </EbookButton>
             
             <ShareSection>
               <ShareTitle>📤 Compartilhar Resultado</ShareTitle>
