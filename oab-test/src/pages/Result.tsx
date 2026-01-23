@@ -113,13 +113,13 @@ const Medal = styled.div`
 `;
 
 const PlaceNumber = styled.div`
-  font-size: 0.7rem;
+  font-size: 1rem;
   opacity: 0.9;
   margin-bottom: 0rem;
   margin-top: 0.5rem;
   font-weight: bold;
   @media (max-width: 768px) {
-    font-size: 0.65rem;
+    font-size: 0.9rem;
   }
 `;
 
@@ -189,24 +189,39 @@ const ExplanationCard = styled.div<{ rank: number }>`
   }
 `;
 
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  
+  img {
+    max-height: 50px;
+    object-fit: contain;
+  }
+`;
+
 const TestSelector = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-bottom: 1.5rem;
   justify-content: center;
   flex-wrap: wrap;
+  padding: 0.8rem;
+  background: #f9f9f9;
+  border-radius: 8px;
 `;
 
 const TestTab = styled.button<{ active: boolean }>`
-  padding: 0.65rem 1.2rem;
+  padding: 0.4rem 0.8rem;
   background: ${props => props.active ? 'linear-gradient(135deg, #4CAF50, #45a049)' : '#f0f0f0'};
-  color: ${props => props.active ? 'white' : '#333'};
-  border: 2px solid ${props => props.active ? '#4CAF50' : '#e0e0e0'};
-  border-radius: 12px;
+  color: ${props => props.active ? 'white' : '#999'};
+  border: 1px solid ${props => props.active ? '#4CAF50' : '#e0e0e0'};
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
   transition: all 0.3s ease;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
 
   &:hover {
     border-color: #4CAF50;
@@ -398,11 +413,15 @@ const Result: React.FC = () => {
   const [tests, setTests] = useState<Array<{ id: string; data: TestResponse }>>([]);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
   const [isLoadingResults, setIsLoadingResults] = useState(true);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchResults = async () => {
       setIsLoadingResults(true);
       if (auth.currentUser) {
+        // Get user's first name
+        const firstName = auth.currentUser?.displayName?.split(' ')[0] || '';
+        setUserName(firstName);
         try {
           const attemptsRef = collection(db, 'tests', auth.currentUser.uid, 'attempts');
           const q = query(attemptsRef, orderBy('timestamp', 'desc'));
@@ -491,7 +510,7 @@ const Result: React.FC = () => {
       ctx.font = 'bold 40px Arial, sans-serif';
       ctx.textAlign = 'center';
       const userName = auth.currentUser?.displayName?.split(' ')[0] || 'você';
-      ctx.fillText(`Parabéns,`, 540, 220);
+      ctx.fillText(`Parabéns, ${userName}!`, 540, 220);
 
       // "Sua área de maior afinidade é"
       ctx.fillStyle = '#E8A740';
@@ -627,9 +646,6 @@ const Result: React.FC = () => {
             </div>
           ) : (
             <>
-          <Title>🎉 Parabéns!</Title>
-          <Subtitle>Confira seu resultado</Subtitle>
-          
           {tests.length > 0 && (
             <TestSelector>
               {tests.map((t, idx) => {
@@ -641,15 +657,22 @@ const Result: React.FC = () => {
                     active={currentTestIndex === idx}
                     onClick={() => setCurrentTestIndex(idx)}
                   >
-                    Teste {tests.length - idx} • {dateStr}
+                    {tests.length - idx} • {dateStr}
                   </TestTab>
                 );
               })}
             </TestSelector>
           )}
           
+          <Title>🎉 Parabéns{userName ? `, ${userName}` : ''}!</Title>
+          <Subtitle>Confira seu resultado</Subtitle>
+          
+          <LogoContainer>
+            <img src="https://meucurso.com.br/_next/image?url=%2Flogos%2Fmeu_curso.webp&w=256&q=75" alt="MeuCurso" />
+          </LogoContainer>
+          
           <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-            <Message>✨ Sua área de maior afinidade é <strong>{ranking[0]}</strong>!</Message>
+            <Message>✨ Sua área de 2ª Fase é <strong>{ranking[0]}</strong>!</Message>
           </div>
           
           <Podium>
@@ -681,7 +704,7 @@ const Result: React.FC = () => {
             </p>
             
             <EbookButton onClick={() => window.open('https://meucurso.com.br/ebookescolha2afase', '_blank')}>
-              📚 Baixe o e-book Escolha de Área de 2ª Fase
+              📚 Baixe o e-book e conheça as áreas do seu pódium
             </EbookButton>
             
             <SimuladoButton onClick={() => window.open('https://aluno.meucurso.com.br/StudyRoute/Degustate/31c3976d-f85c-4c6d-bf9e-2783ba3a709e?l=true', '_blank')}>

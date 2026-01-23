@@ -222,10 +222,10 @@ const PreTest: React.FC = () => {
             </FormGroup>
             
             <FormGroup>
-              <Label>⏰ Quantas horas por semana você tem para estudar?</Label>
+              <Label>🔄 Quantas vezes já prestou a 2ª fase?</Label>
               <Input
                 type="text"
-                placeholder="Ex: 10 horas"
+                placeholder="Ex: 2 vezes"
                 value={studyHours}
                 onChange={(e) => setStudyHours(e.target.value)}
                 required

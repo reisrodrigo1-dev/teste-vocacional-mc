@@ -774,7 +774,7 @@ const Quiz: React.FC = () => {
 
   const filteredNewsData = getFilteredNewsData();
 
-  const areas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário', 'Consumidor', 'Humanos', 'Ambiental', 'Internacional', 'Criança e Adolescente', 'Outra área'];
+  const areas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário', 'Consumidor', 'Humanos', 'Ambiental', 'Internacional', 'Criança e Adolescente', 'Previdenciário', 'Outra área'];
   
   // 7 áreas principais para perguntas de ranking
   const mainAreas: Area[] = ['Administrativo', 'Civil', 'Constitucional', 'Empresarial', 'Penal', 'Trabalho', 'Tributário'];
@@ -961,6 +961,7 @@ const Quiz: React.FC = () => {
       Ambiental: 0,
       Internacional: 0,
       'Criança e Adolescente': 0,
+      Previdenciário: 0,
       'Outra área': 0,
     };
 
@@ -998,6 +999,12 @@ const Quiz: React.FC = () => {
     }
     if (responses.affinityFirst) scores[responses.affinityFirst as Area] += 2;
     if (responses.affinitySecond) scores[responses.affinitySecond as Area] += 1;
+    
+    // Map secondary areas to primary areas
+    if (scores.Previdenciário > 0) {
+      scores.Trabalho += scores.Previdenciário;
+    }
+    
     if (responses.proceduralPieces) {
       responses.proceduralPieces.forEach((piece: string) => {
         if (piece.includes('civil')) scores.Civil += 1;
@@ -1026,6 +1033,7 @@ const Quiz: React.FC = () => {
           scores.Civil -= 1;
           scores.Penal -= 1;
         }
+        if (area === 'Previdenciário') scores.Trabalho -= 1;
       });
     }
     // Reasons: for now, not scored, but sent to AI
@@ -1109,8 +1117,8 @@ RESPOSTAS DO USUÁRIO:
 - Experiência prática: ${testResponse.experience.join(', ') || 'nenhuma'}
 - Trabalho de conclusão: ${testResponse.tcc.join(', ') || 'nenhum'}
 - Processualista com maior facilidade: ${testResponse.processualist}
-- Notícias que gostaria de ler: ${newsLiked || 'nenhuma selecionada'}
-- Notícias que NÃO gostaria de ler: ${newsDisliked || 'nenhuma selecionada'}
+- Assuntos que gostaria de ler: ${newsLiked || 'nenhum selecionado'}
+- Assuntos que NÃO gostaria de ler: ${newsDisliked || 'nenhum selecionado'}
 - Afinidade (1º): ${testResponse.affinityFirst}
 - Afinidade (2º): ${testResponse.affinitySecond}
 - Peças processuais interessantes: ${testResponse.proceduralPieces.join(', ') || 'nenhuma'}

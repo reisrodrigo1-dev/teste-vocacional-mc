@@ -153,12 +153,50 @@ const ErrorMessage = styled.div`
   line-height: 1.4;
 `;
 
+const CheckboxWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+`;
+
+const CheckboxInput = styled.input`
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #4CAF50;
+  min-width: 20px;
+`;
+
+const CheckboxLabel = styled.label`
+  color: #333;
+  font-size: 0.85rem;
+  cursor: pointer;
+  line-height: 1.4;
+  
+  a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [lgpdAccepted, setLgpdAccepted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -166,6 +204,13 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    // Validate LGPD acceptance
+    if (!lgpdAccepted) {
+      setError('Você precisa aceitar a Política de Privacidade (LGPD) para continuar.');
+      return;
+    }
+    
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -175,6 +220,8 @@ const Register: React.FC = () => {
         cpf,
         whatsapp,
         email,
+        lgpdAccepted: true,
+        lgpdAcceptedAt: new Date(),
         graduationStatus: 'Não',
         examEdition: '45',
         studyHours: '',
@@ -271,7 +318,18 @@ const Register: React.FC = () => {
               required
             />
           </div>
-          <Button type="submit" disabled={loading}>{loading ? 'Cadastrando...' : 'Cadastrar'}</Button>
+          <CheckboxWrapper>
+            <CheckboxInput
+              type="checkbox"
+              id="lgpd"
+              checked={lgpdAccepted}
+              onChange={(e) => setLgpdAccepted(e.target.checked)}
+            />
+            <CheckboxLabel htmlFor="lgpd">
+              ✅ Concordo com a <a href="https://meucurso.com.br/politica-privacidade" target="_blank" rel="noopener noreferrer">Política de Privacidade</a> e a <a href="https://meucurso.com.br/lgpd" target="_blank" rel="noopener noreferrer">Proteção de Dados (LGPD)</a>
+            </CheckboxLabel>
+          </CheckboxWrapper>
+          <Button type="submit" disabled={loading || !lgpdAccepted}>{loading ? 'Cadastrando...' : 'Cadastrar'}</Button>
         </Form>
         <LinkWrapper>
           Já tem conta? <Link onClick={() => navigate('/login')}>Entrar</Link>
