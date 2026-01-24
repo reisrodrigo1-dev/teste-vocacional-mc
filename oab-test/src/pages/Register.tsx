@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -214,6 +214,17 @@ const Register: React.FC = () => {
     setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Update profile with user's name
+      try {
+        await updateProfile(userCredential.user, {
+          displayName: name,
+        });
+        console.log('Profile updated successfully with name:', name);
+      } catch (profileErr) {
+        console.error('Erro ao atualizar profile:', profileErr);
+      }
+      
       const user = {
         id: userCredential.user.uid,
         name,
@@ -266,6 +277,9 @@ const Register: React.FC = () => {
         <Card>
           <Logo>🎓 MeuCurso</Logo>
           <Subtitle>Criar Conta</Subtitle>
+          <p style={{ color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: '0 0 1rem 0' }}>
+            ⚠️ Este cadastro é diferente da área do aluno MeuCurso.
+          </p>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <Form onSubmit={handleSubmit}>
             <div>

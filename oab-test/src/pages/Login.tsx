@@ -200,6 +200,9 @@ const Login: React.FC = () => {
             <Logo>Teste Vocacional</Logo>
           </LogoContainer>
           <Subtitle>Veja qual sua área de 2ª fase</Subtitle>
+          <p style={{ color: '#666', fontSize: '0.85rem', textAlign: 'center', margin: '0 0 1rem 0' }}>
+            ⚠️ Este login é diferente da área do aluno MeuCurso.
+          </p>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <Form onSubmit={handleSubmit}>
             <Input

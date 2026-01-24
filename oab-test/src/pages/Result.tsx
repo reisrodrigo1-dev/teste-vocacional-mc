@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
+import { reload } from 'firebase/auth';
 import type { TestResponse } from '../types';
 import { Layout } from '../components/Layout';
 
@@ -418,11 +419,31 @@ const Result: React.FC = () => {
   useEffect(() => {
     const fetchResults = async () => {
       setIsLoadingResults(true);
-      if (auth.currentUser) {
-        // Get user's first name
-        const firstName = auth.currentUser?.displayName?.split(' ')[0] || '';
-        setUserName(firstName);
-        try {
+      try {
+        if (auth.currentUser) {
+          // Reload user to get latest data
+          await reload(auth.currentUser);
+          
+          // Get user's first name from displayName
+          let firstName = auth.currentUser?.displayName?.split(' ')[0] || '';
+          console.log('Display Name:', auth.currentUser?.displayName);
+          console.log('First Name:', firstName);
+          
+          // If displayName is empty, try to get from Firestore
+          if (!firstName) {
+            try {
+              const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+              if (userDoc.exists() && userDoc.data()?.name) {
+                firstName = userDoc.data().name.split(' ')[0];
+                console.log('Name from Firestore:', firstName);
+              }
+            } catch (firestoreErr) {
+              console.error('Erro ao buscar nome do Firestore:', firestoreErr);
+            }
+          }
+          
+          setUserName(firstName);
+          
           const attemptsRef = collection(db, 'tests', auth.currentUser.uid, 'attempts');
           const q = query(attemptsRef, orderBy('timestamp', 'desc'));
           const querySnapshot = await getDocs(q);
@@ -446,11 +467,12 @@ const Result: React.FC = () => {
           } else {
             setCurrentTestIndex(0);
           }
-        } catch (error) {
-          console.error('Erro ao buscar testes:', error);
         }
+      } catch (error) {
+        console.error('Erro ao buscar testes:', error);
+      } finally {
+        setIsLoadingResults(false);
       }
-      setIsLoadingResults(false);
     };
     fetchResults();
   }, []);
@@ -698,13 +720,19 @@ const Result: React.FC = () => {
             ))}
           </ExplanationSection>
           
+          <div style={{ backgroundColor: '#f0f8f0', border: '2px solid #4CAF50', borderRadius: '12px', padding: '1.5rem', margin: '2rem 0', textAlign: 'center' }}>
+            <p style={{ color: '#333', fontSize: '0.9rem', margin: 0, lineHeight: '1.6' }}>
+              <strong>ℹ️ Observação importante:</strong> Este teste tem caráter apenas orientativo para a escolha da área da segunda fase. Recomenda-se também considerar o desempenho nas questões objetivas.
+            </p>
+          </div>
+          
           <div style={{ marginTop: '2rem', textAlign: 'center' }}>
             <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '2rem', lineHeight: '1.6', wordBreak: 'break-word' }}>
               Com base em suas respostas, você mostrou maior afinidade com esta área. Comece seus estudos e boa sorte na prova!
             </p>
             
-            <EbookButton onClick={() => window.open('https://meucurso.com.br/ebookescolha2afase', '_blank')}>
-              📚 Baixe o e-book e conheça as áreas do seu pódium
+            <EbookButton disabled>
+              📚 Baixe o e-book e conheça as áreas do seu pódium (<strong>EM BREVE</strong>)
             </EbookButton>
             
             <SimuladoButton onClick={() => window.open('https://aluno.meucurso.com.br/StudyRoute/Degustate/31c3976d-f85c-4c6d-bf9e-2783ba3a709e?l=true', '_blank')}>
