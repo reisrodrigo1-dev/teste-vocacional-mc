@@ -177,16 +177,31 @@ const ExplanationCard = styled.div<{ rank: number }>`
   }};
   
   h4 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 1rem 0;
     font-size: 1.1rem;
     color: #333;
+    font-weight: 700;
   }
   
   p {
     margin: 0;
     font-size: 0.95rem;
-    color: #666;
-    line-height: 1.5;
+    color: #555;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.8;
+  }
+  
+  li {
+    margin: 0.5rem 0;
   }
 `;
 
@@ -708,16 +723,28 @@ const Result: React.FC = () => {
           </Podium>
 
           <ExplanationSection>
-            {explanationOrder.map((item, rankNum) => (
-              <ExplanationCard key={item.area} rank={rankNum + 1}>
-                <h4>
-                  {item.medal} {item.place} Lugar - {item.area}
-                </h4>
-                <p>
-                  {test.aiExplanations?.[item.area] || 'Esta área se destaca em seu perfil de afinidade e aptidão.'}
-                </p>
-              </ExplanationCard>
-            ))}
+            {explanationOrder.map((item, rankNum) => {
+              const explanation = test.aiExplanations?.[item.area] || 'Esta área se destaca em seu perfil de afinidade e aptidão.';
+              const isFormattedList = explanation.includes('\n- ');
+              
+              return (
+                <ExplanationCard key={item.area} rank={rankNum + 1}>
+                  <h4>
+                    {item.medal} {item.place} Lugar - {item.area}
+                  </h4>
+                  {isFormattedList ? (
+                    <ul>
+                      {explanation.split('\n').map((line, idx) => {
+                        const cleanLine = line.replace(/^- /, '');
+                        return cleanLine ? <li key={idx}>{cleanLine}</li> : null;
+                      })}
+                    </ul>
+                  ) : (
+                    <p>{explanation}</p>
+                  )}
+                </ExplanationCard>
+              );
+            })}
           </ExplanationSection>
           
           <div style={{ backgroundColor: '#f0f8f0', border: '2px solid #4CAF50', borderRadius: '12px', padding: '1.5rem', margin: '2rem 0', textAlign: 'center' }}>

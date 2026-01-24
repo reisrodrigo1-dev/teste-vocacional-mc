@@ -604,7 +604,15 @@ const NewsVoteContainer = styled.div`
 `;
 
 const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' | 'none' }>`
-  background: none;
+  background: ${props => {
+    if (props.active) {
+      if (props.type === 'none') {
+        return 'rgba(153, 153, 153, 0.15)';
+      }
+      return props.type === 'like' ? 'rgba(76, 175, 80, 0.15)' : 'rgba(255, 107, 107, 0.15)';
+    }
+    return 'white';
+  }};
   border: 2px solid ${props => {
     if (props.type === 'none') {
       return props.active ? '#999' : '#ddd';
@@ -615,10 +623,11 @@ const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' | 
   padding: 0.6rem 1.2rem;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-weight: ${props => props.active ? '600' : '500'};
 
   &:hover {
     border-color: ${props => {
@@ -629,9 +638,9 @@ const VoteButton = styled.button<{ active?: boolean; type: 'like' | 'dislike' | 
     }};
     background: ${props => {
       if (props.type === 'none') {
-        return 'rgba(153, 153, 153, 0.05)';
+        return 'rgba(153, 153, 153, 0.1)';
       }
-      return props.type === 'like' ? 'rgba(76, 175, 80, 0.05)' : 'rgba(255, 107, 107, 0.05)';
+      return props.type === 'like' ? 'rgba(76, 175, 80, 0.1)' : 'rgba(255, 107, 107, 0.1)';
     }};
   }
 
@@ -1143,21 +1152,80 @@ Com base em AFINIDADE como critério primário, nos dados reais de aprovação,
 desmistificando os mitos, e considerando que a prova é consultável (tornando a afinidade intuitiva),
 ranqueie as 7 áreas de forma DECRESCENTE de recomendação.
 
+INFORMAÇÕES DETALHADAS POR ÁREA:
+
+Direito Administrativo:
+- Aspectos positivos: Indicada para afinidade com licitação, contratos, serviço público, responsabilidade do Estado
+- Candidatos com experiência em órgãos públicos têm vantagem
+- Peças mais cobradas: petições iniciais e recursos
+- Pontos de atenção: Conteúdo extremamente técnico e específico
+
+Direito Civil:
+- Aspectos positivos: 5 peças-mestras principais; 2ª área com maior índice de aprovação (~27%)
+- Banca cobra temas do cotidiano: consumidor, responsabilidade civil, família, sucessões, locação
+- Peças frequentes: petições iniciais, recursos e defesas
+- Pontos de atenção: Recomendada apenas para quem tem afinidade com direito civil e áreas correlatas
+
+Direito Constitucional:
+- Aspectos positivos: Área com MAIOR índice de aprovação (~33%)
+- Conteúdo focado em: direitos fundamentais, direitos políticos, ações constitucionais
+- Peças frequentes: petições iniciais e recursos
+- Pontos de atenção: Não escolher apenas pelo alto índice; requer processo civil aplicado
+
+Direito Empresarial:
+- Aspectos positivos: Indicada para experiência com sociedades, empresário, títulos de crédito, falência
+- O baixo índice oficial é distorcido por exame antigo; índice real é similar ao tributário e administrativo
+- Grande utilização de processo civil: petição inicial, tutelas, recursos
+- Pontos de atenção: Exige afinidade com CPC
+
+Direito Penal:
+- Aspectos positivos: Fortemente recomendada para quem gosta e se identifica com direito penal
+- Peças mais cobradas: recursos
+- Pontos de atenção: Alto índice de reprovação (~16%); não escolher por achar que é mais fácil
+- Mito desmentido: Não é mais fácil nem tem menos peças
+
+Direito do Trabalho:
+- Aspectos positivos: Indicada para afinidade com relação de emprego, direitos trabalhistas, contrato de trabalho
+- Muitos escolhem por contato prático: férias, jornada, direitos trabalhistas
+- Peças cobradas: reclamação trabalhista (inicial), contestação e recursos
+- Pontos de atenção: Cobrança de peças atípicas (mandado de segurança, exceção de pré-executividade); alto índice de reprovação (~16%)
+
+Direito Tributário:
+- Aspectos positivos: Recomendada para identificação com princípios tributários, limitações ao poder de tributar, espécies de tributos
+- Na 2ª fase banca cobra defesa do contribuinte
+- Peças frequentes: ação anulatória, declaratória, repetição de indébito, mandado de segurança, recursos
+- Índice médio de aprovação: ~24%
+- Pontos de atenção: Não deixar de escolher por causa da reforma tributária (impactos pequenos)
+
 PARA AS EXPLICAÇÕES: Seja ESPECÍFICO e PESSOAL. Use SEGUNDA PESSOA (você, seu, sua) para falar DIRETAMENTE com o usuário.
-Cite APENAS dados compreensíveis e diretos das respostas do usuário:
-- Afinidades que ele declarou
-- Experiência prática que possui
-- Peças processuais que o interessaram
-- Processualista em que tem facilidade
-Explique POR QUE esta área faz sentido PARA ELE. NÃO mencione scores, pontos ou cálculos - use linguagem acessível e conversacional.
+
+FORMATO DOS BULLET POINTS:
+1. PRIMEIRA LINHA: Resumo principal com sua afinidade ou experiência declarada
+   Exemplo: "Você tem afinidade com Direito Civil e já possui experiência nessa área"
+
+2. SEGUNDA LINHA: Detalhes específicos que justificam a recomendação
+   Exemplo: "As peças que mais cobram nessa área são petições iniciais, recursos e defesas"
+
+3. TERCEIRA LINHA (opcional): Conselho ou perspectiva adicional
+   Exemplo: "Com sua facilidade com processo civil, você tem vantagem competitiva"
+
+ESTRUTURA CLARA:
+- Use linguagem direta e concisa
+- Cada bullet point deve ser uma frase completa
+- Conecte as informações às respostas específicas do usuário
+- Use termos técnicos apenas quando necessário
+- Sem emoticons ou caracteres especiais
+
+Explique POR QUE esta área faz sentido PARA ELE, usando as informações detalhadas acima. 
+NÃO mencione scores, pontos ou cálculos - use linguagem acessível e conversacional em BULLET POINTS.
 
 RETORNE OBRIGATORIAMENTE um JSON neste EXATO formato (sem markdown, sem explicações extras):
 {
   "ranking": ["Área1", "Área2", "Área3", "Área4", "Área5", "Área6", "Área7"],
   "explanations": {
-    "Área1": "Explicação personalizada em SEGUNDA PESSOA (2-3 linhas) clara e acessível. Fale com o usuário: 'Você demonstrou...', 'Sua afinidade...', 'Com sua experiência em...', etc.",
-    "Área2": "Explicação personalizada em SEGUNDA PESSOA (2-3 linhas) clara e acessível",
-    "Área3": "Explicação personalizada em SEGUNDA PESSOA (2-3 linhas) clara e acessível"
+    "Área1": "Explicação em BULLET POINTS. Exemplo: - Você demonstrou afinidade com... - Sua experiência em... - As peças que mais interessaram...",
+    "Área2": "Explicação em BULLET POINTS clara e acessível",
+    "Área3": "Explicação em BULLET POINTS clara e acessível"
   }
 }
 
