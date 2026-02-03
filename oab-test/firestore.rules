@@ -2,22 +2,37 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Permitir que usuários autenticados criem e acessem seus próprios documentos
+    // Permitir leitura pública para admin
     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
       allow create: if request.auth.uid == request.resource.data.id;
     }
     
-    // Permitir que usuários autenticados criem e acessem seus próprios testes e subcoleção de tentativas
+    // Permitir leitura de testes
     match /tests/{userId} {
-      allow read, write: if request.auth.uid == userId;
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
       allow create: if request.auth.uid == userId;
       
-      // Permitir acesso à subcoleção attempts
+      // Permitir leitura de attempts (subcoleção)
       match /attempts/{testId} {
-        allow read, write: if request.auth.uid == userId;
+        allow read: if true;
+        allow write: if request.auth.uid == userId;
         allow create: if request.auth.uid == userId;
       }
     }
+
+    // Permitir collectionGroup query para attempts
+    match /{path=**}/attempts/{testId} {
+      allow read: if true;
+    }
+
+    // Permitir leitura de testResponses
+    match /testResponses/{document=**} {
+      allow read: if true;
+    }
   }
 }
+
+

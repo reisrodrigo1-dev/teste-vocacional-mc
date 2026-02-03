@@ -6,7 +6,9 @@ import Quiz from './pages/Quiz';
 import Result from './pages/Result';
 import Profile from './pages/Profile';
 import History from './pages/History';
+import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
       <Route path="/result" element={<ProtectedRoute><Result /></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+      <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
     </Routes>
   );
 }
